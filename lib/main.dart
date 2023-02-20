@@ -5,7 +5,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:ticktok/const/colors.dart';
 import 'package:ticktok/controller/auth_controller.dart';
-import 'package:ticktok/view/auth/login_screen.dart';
 import 'package:ticktok/view/auth/signup_page.dart';
 
 import 'firebase_options.dart';
@@ -31,7 +30,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: backgroundColor,
       ),
       title: "Tik Tok",
-      home: SignUpPage(),
+      home: const SignUpPage(),
     );
   }
 }

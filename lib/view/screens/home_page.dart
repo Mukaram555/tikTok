@@ -3,7 +3,7 @@ import 'package:ticktok/const/colors.dart';
 import 'package:ticktok/widgets/custom_add_icon.dart';
 
 class HomePage extends StatefulWidget {
-   HomePage({Key? key}) : super(key: key);
+   const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -51,6 +51,9 @@ class _HomePageState extends State<HomePage> {
               ),
               label: "Profile"),
         ],
+      ),
+      body: Center(
+        child: pageIndex[pageIDX],
       ),
     );
   }
