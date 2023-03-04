@@ -31,7 +31,7 @@ class Comment{
 
   static Comment fromSnap(DocumentSnapshot snapshot){
     var snap = snapshot.data() as Map<String, dynamic>;
-    return Comment(userName: snap["username"], comment: snap['comment'], datePub: snap['datePub'], likes: snap['likes'], profilePic: snap['profilePic'], uid: snap['uid'], id: snap['id'])
+    return Comment(userName: snap["username"], comment: snap['comment'], datePub: snap['datePub'], likes: snap['likes'], profilePic: snap['profilePic'], uid: snap['uid'], id: snap['id']);
   }
 
 }

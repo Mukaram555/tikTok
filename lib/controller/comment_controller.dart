@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-
 import '../model/comment_model.dart';
 
 class CommentController extends GetxController{
@@ -45,7 +44,7 @@ class CommentController extends GetxController{
         DocumentSnapshot doc = await FirebaseFirestore.instance.collection("videos").doc(postID).get();
         await FirebaseFirestore.instance.collection("videos").doc(postID).update(
             {
-              'commentCount' : (doc.data() as dynamic)['commentsCount']+1,
+              'commentsCount' : (doc.data() as dynamic)['commentsCount']+1,
 
             });
       }
@@ -56,5 +55,19 @@ class CommentController extends GetxController{
       Get.snackbar("Error in Uploading Comment", e.toString());
     }
   }
-  likeComment(){}
+  likeComment(String id) async{
+    var uid = FirebaseAuth.instance.currentUser!.uid;
+    DocumentSnapshot doc = await FirebaseFirestore.instance.collection("videos").doc(postID).collection("comments").doc(id).get();
+    if((doc.data()! as dynamic)['likes'].contains(uid)){
+      await FirebaseFirestore.instance.collection('videos').doc(postID).collection('comments').doc(id).update({
+        'likes' : FieldValue.arrayRemove([uid]),
+      });
+    }else{
+      await FirebaseFirestore.instance.collection('videos').doc(postID).collection('comments').doc(id).update({
+        'likes' : FieldValue.arrayUnion([uid]),
+      });
+    }
+  }
+
 }
+

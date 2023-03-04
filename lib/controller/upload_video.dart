@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
+import 'package:ticktok/view/screens/home_page.dart';
 import 'package:video_compress/video_compress.dart';
 
 import '../model/video_model.dart';
@@ -48,7 +49,7 @@ class VideoUploadController extends GetxController {
           .doc(uuid)
           .set(video.toJson());
       Get.snackbar("Video Uploaded", "Your Video is Uploaded Successfully");
-      Get.back();
+      Get.to(HomePage());
     } catch (e) {
       Get.snackbar("Error Uploading Video", e.toString());
     }

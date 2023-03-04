@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ticktok/controller/comment_controller.dart';
 import 'package:ticktok/widgets/text_input.dart';
+import 'package:timeago/timeago.dart' as tago;
 
 class CommentScreen extends StatelessWidget {
   // const CommentScreen({Key? key}) : super(key: key);
+  final auth =  FirebaseAuth.instance;
 
   final String id;
   CommentScreen({required this.id});
@@ -29,39 +32,52 @@ class CommentScreen extends StatelessWidget {
           child: Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 6,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.grey,
-                        ),
-                        title: Row(
-                          children: [
-                          Text("User Name", style: TextStyle(fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.redAccent,),),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text("Comment", style: TextStyle(
-                          fontSize: 13,),
-                          ),
-                          ]
-                        ),
-                        subtitle: Row(
-                          children: [
-                            Text("Date Time",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,),),
-                          SizedBox(
-                            width: 5,
-                          ),
-                            Text("10 Likes"),
-                          ],
-                        ),
-                        trailing: Icon(Icons.favorite),
-                      );
-                    }),
+                child: Obx(()
+                {
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: commentController.comments.length,
+                        itemBuilder: (context, index) {
+                          final comment = commentController.comments[index];
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: Colors.grey,
+                              backgroundImage: NetworkImage(comment.profilePic),
+                            ),
+                            title: Row(
+                              children: [
+                              Text(comment.userName, style: TextStyle(fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.redAccent,),),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(comment.comment, style: TextStyle(
+                              fontSize: 13,),
+                              ),
+                              ]
+                            ),
+                            subtitle: Row(
+                              children: [
+                                Text(tago.format(comment.datePub.toDate()),style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,),),
+                              SizedBox(
+                                width: 5,
+                              ),
+                                Text("${comment.likes.length} Likes",style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold
+                                ),),
+                              ],
+                            ),
+                            trailing: InkWell(
+                                onTap: (){
+                                  commentController.likeComment(comment.id);
+                                },
+                                child: Icon(Icons.favorite,color: comment.likes.contains(auth.currentUser!.uid) ? Colors.red : Colors.white,)),
+                          );
+                        });
+                  }
+                ),
               ),
               Divider(),
               ListTile(

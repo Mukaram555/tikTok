@@ -20,6 +20,14 @@ class VideoController extends GetxController{
     }));
   }
 
+  shareVideo(String vidId) async {
+    DocumentSnapshot doc = await FirebaseFirestore.instance.collection("videos").doc(vidId).get();
+    int newShareCount = (doc.data() as dynamic)['shareCount']+1;
+    await FirebaseFirestore.instance.collection("videos").doc(vidId).update({
+'shareCount' : newShareCount,
+    });
+  }
+
   likesVideo(String id)async {
     DocumentSnapshot doc = await FirebaseFirestore.instance.collection("videos").doc(id).get();
     var uid = AuthController.instance.user.uid;

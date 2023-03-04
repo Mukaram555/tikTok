@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ticktok/controller/auth_controller.dart';
+import 'package:ticktok/view/auth/signup_page.dart';
 import 'package:ticktok/widgets/text_input.dart';
+import 'package:get/get.dart';
 
 class LoginPage extends StatelessWidget {
    LoginPage({Key? key}) : super(key: key);
@@ -34,6 +36,20 @@ class LoginPage extends StatelessWidget {
               child: Text("Login"),
             ),
             ),
+            SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Don't have an account/ ",style: TextStyle(color: Colors.white70,fontSize: 16,),),
+                InkWell(
+                    onTap: (){Get.to(SignUpPage());
+                      },
+                    child: Text("Sign Up",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),))
+              ],
+            )
+            
           ],
         ),
       ),

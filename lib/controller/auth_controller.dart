@@ -29,9 +29,9 @@ class AuthController extends GetxController {
     // TODO: implement onReady
     super.onReady();
     // Observable keyword - Continuously checking variable is changing or not
-    _user = Rx<User?>(FirebaseAuth.instance.currentUser!);
+    _user = Rx<User?>(FirebaseAuth.instance.currentUser);
     _user.bindStream(FirebaseAuth.instance.authStateChanges());
-    ever(_user, (callback) => _setInitialView);
+    ever(_user, _setInitialView);
 
   }
   _setInitialView(User? user){
@@ -53,12 +53,14 @@ class AuthController extends GetxController {
     try {
       if (userName.isNotEmpty &&
           email.isNotEmpty &&
-          password.isNotEmpty) {
-        var credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+          password.isNotEmpty &&
+      image != null) {
+        UserCredential credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
         String downloadUrl = await _uploadProfileImage(image);
-        MyUser user = MyUser(name: userName, profileImage: downloadUrl, email: email, uid: credential.user!.uid);
+        MyUser user = MyUser(name: userName, profilePic: downloadUrl, email: email, uid: credential.user!.uid);
         await FirebaseFirestore.instance.collection("users").doc(credential.user!.uid).set(user.toJson());
         Get.snackbar("Account Created", "Your Account is created Successfully");
+        Get.to(HomePage());
       }else{
         Get.snackbar("Error Creating Account", "Please Enter All the Required Fields");
       }
@@ -73,7 +75,7 @@ class AuthController extends GetxController {
 
     var reference = FirebaseStorage.instance
         .ref()
-        .child("ProfileImage")
+        .child("profilePic")
         .child(FirebaseAuth.instance.currentUser!.uid);
     UploadTask uploadTask = reference.putFile(image);
     TaskSnapshot snapshot = await uploadTask;
@@ -87,11 +89,14 @@ class AuthController extends GetxController {
         await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
         Get.to(const HomePage());
         Get.snackbar("Login", "Login Successfully");
-      }else{
-        Get.snackbar("Error Logging In", "Please Enter the Login Details");
       }
     }catch(e){
       Get.snackbar("Error Logging In", e.toString());
     }
+  }
+  
+  signOut(){
+    FirebaseAuth.instance.signOut();
+    Get.offAll(LoginPage());
   }
 }
